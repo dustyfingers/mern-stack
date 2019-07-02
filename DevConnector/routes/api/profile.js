@@ -106,6 +106,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+
 // @route: GET api/profile/user/:user_id
 // @desc: get profile by user id
 // @access: public
@@ -120,5 +121,25 @@ router.get('/user/:user_id', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+
+
+// @route: DELETE api/profile
+// @desc: delete a user profile
+// @access: private
+router.delete('/', auth, async (req, res) => {
+    try {
+        // TODO: remove users posts
+
+        // remove profile 
+        await Profile.findOneAndRemove({ user: req.user.id });
+
+        // remove user
+        await User.findOneAndRemove({ _id: req.user.id });
+        res.json({ msg: 'User deleted.' });
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
 
 module.exports = router;
